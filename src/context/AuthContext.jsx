@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 
-const ADMIN_EMAIL = 'mesmeh2004@gmail.com';
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
