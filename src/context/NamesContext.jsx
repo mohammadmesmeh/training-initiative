@@ -23,10 +23,14 @@ export function NamesProvider({ children }) {
     return true;
   };
 
+  const removeName = (index) => {
+    setNames(prev => prev.filter((_, i) => i !== index));
+  };
+
   const clearNames = () => setNames([]);
 
   return (
-    <NamesContext.Provider value={{ names, addName, clearNames }}>
+    <NamesContext.Provider value={{ names, addName, removeName, clearNames }}>
       {children}
     </NamesContext.Provider>
   );

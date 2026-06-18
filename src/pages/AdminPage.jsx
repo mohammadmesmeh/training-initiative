@@ -3,9 +3,21 @@ import { useNames } from '../context/NamesContext';
 import { Link } from 'react-router-dom';
 
 export default function AdminPage() {
-  const { names, clearNames } = useNames();
+  const { names, removeName, clearNames } = useNames();
   const [winner, setWinner] = useState(null); // { index, name }
   const [isDrawing, setIsDrawing] = useState(false);
+
+  const handleDelete = (index) => {
+    removeName(index);
+    setWinner((currentWinner) => {
+      if (!currentWinner) return null;
+      if (currentWinner.index === index) return null;
+      if (currentWinner.index > index) {
+        return { ...currentWinner, index: currentWinner.index - 1 };
+      }
+      return currentWinner;
+    });
+  };
 
   const handleDraw = () => {
     if (names.length === 0) return;
@@ -158,14 +170,23 @@ export default function AdminPage() {
                     <span className={`text-sm font-medium transition-colors duration-300 ${isWinner ? 'text-[#009E89]' : 'text-[#0F1F3D]'}`}>
                       {name}
                     </span>
-                    {isWinner && (
-                      <span className="ml-auto text-xs font-semibold text-[#00BFA6] flex items-center gap-1 animate-fade-in">
-                        <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
-                          <path d="M7.5 1a.75.75 0 0 1 .67.416l1.467 2.973 3.283.477a.75.75 0 0 1 .416 1.279l-2.375 2.315.561 3.268a.75.75 0 0 1-1.088.791L7.5 10.928l-2.934 1.541a.75.75 0 0 1-1.088-.79l.56-3.27L1.663 6.145a.75.75 0 0 1 .416-1.279l3.283-.477L6.83 1.416A.75.75 0 0 1 7.5 1Z" />
-                        </svg>
-                        The Chosen One
-                      </span>
-                    )}
+                    <div className="ml-auto flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(index)}
+                        className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-500 transition-colors duration-150 hover:border-red-200 hover:text-red-500 hover:bg-red-50"
+                      >
+                        Delete
+                      </button>
+                      {isWinner && (
+                        <span className="text-xs font-semibold text-[#00BFA6] flex items-center gap-1 animate-fade-in">
+                          <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
+                            <path d="M7.5 1a.75.75 0 0 1 .67.416l1.467 2.973 3.283.477a.75.75 0 0 1 .416 1.279l-2.375 2.315.561 3.268a.75.75 0 0 1-1.088.791L7.5 10.928l-2.934 1.541a.75.75 0 0 1-1.088-.79l.56-3.27L1.663 6.145a.75.75 0 0 1 .416-1.279l3.283-.477L6.83 1.416A.75.75 0 0 1 7.5 1Z" />
+                          </svg>
+                          The Chosen One
+                        </span>
+                      )}
+                    </div>
                   </li>
                 );
               })}
