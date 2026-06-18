@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0F1F3D;
+  --color-navy-light: #1A3260;
+  --color-teal: #00BFA6;
+  --color-teal-light: #E6FAF8;
+  --color-teal-dark: #009E89;
+  --color-slate: #64748B;
+  --color-surface: #F8F9FC;
+  --color-white: #FFFFFF;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-surface);
+  color: var(--color-navy);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(0, 191, 166, 0.4); }
+  70% { box-shadow: 0 0 0 16px rgba(0, 191, 166, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 191, 166, 0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 1.5s ease-out 2;
+}
+
+.dot-grid-bg {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
