@@ -1,12 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
   const { pathname } = useLocation();
+  const { user, logout, isAdmin } = useAuth();
 
   return (
     <nav className="bg-[#0F1F3D] shadow-lg">
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
+      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-[#00BFA6] flex items-center justify-center">
             <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white" stroke="currentColor" strokeWidth="2.5">
@@ -16,28 +17,53 @@ export default function Navbar() {
           <span className="text-white font-semibold text-base tracking-wide">Training Initiative</span>
         </div>
 
-        {/* Nav Links */}
-        <div className="flex items-center gap-1">
-          <Link
-            to="/"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
-              pathname === '/'
-                ? 'bg-[#00BFA6] text-white'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            Register
-          </Link>
-          <Link
-            to="/admin"
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
-              pathname === '/admin'
-                ? 'bg-[#00BFA6] text-white'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            Admin Draw
-          </Link>
+        <div className="flex flex-1 items-center justify-between gap-3">
+          <div className="flex items-center gap-1">
+            <Link
+              to="/"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                pathname === '/'
+                  ? 'bg-[#00BFA6] text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              Register
+            </Link>
+            <Link
+              to="/admin"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                pathname === '/admin'
+                  ? 'bg-[#00BFA6] text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              Admin Draw
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {user ? (
+              <>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
+                  {isAdmin ? 'Admin' : 'User'}
+                </span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="px-3 py-2 rounded-lg bg-white text-[#0F1F3D] text-xs font-semibold transition hover:bg-slate-100"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="px-3 py-2 rounded-lg bg-white text-[#0F1F3D] text-xs font-semibold transition hover:bg-slate-100"
+              >
+                Login
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>
