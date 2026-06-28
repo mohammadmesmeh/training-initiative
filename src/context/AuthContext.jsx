@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
+const ADMIN_EMAILS = import.meta.env.VITE_ADMIN_EMAIL;
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -21,7 +21,11 @@ export function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
-  const isAdmin = user?.email === ADMIN_EMAIL;
+    
+  ADMIN_EMAILS.split(",")
+  .map(email => email.trim());
+
+const isAdmin = user && ADMIN_EMAILS.includes(user.email);
 
   return (
     <AuthContext.Provider value={{ user, initializing, login, logout, isAdmin }}>
