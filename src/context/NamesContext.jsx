@@ -1,36 +1,36 @@
+
 import { createContext, useContext, useState, useEffect } from 'react';
+import { collection, onSnapshot, deleteDoc, doc, writeBatch } from "firebase/firestore";
+import { db } from "../firebase";
 
 const NamesContext = createContext(null);
 
 export function NamesProvider({ children }) {
-  const [names, setNames] = useState(() => {
-    try {
-      const stored = localStorage.getItem('training_names');
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [names, setNames] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('training_names', JSON.stringify(names));
-  }, [names]);
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      const data = snapshot.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+      setNames(data);
+    });
+    return () => unsubscribe();
+  }, []);
 
-  const addName = (name) => {
-    const trimmed = name.trim();
-    if (!trimmed) return false;
-    setNames(prev => [...prev, trimmed]);
-    return true;
+  const removeName = async (id) => {
+    await deleteDoc(doc(db, "users", id));
   };
 
-  const removeName = (index) => {
-    setNames(prev => prev.filter((_, i) => i !== index));
+  const clearNames = async () => {
+    const batch = writeBatch(db);
+    names.forEach(({ id }) => batch.delete(doc(db, "users", id)));
+    await batch.commit();
   };
-
-  const clearNames = () => setNames([]);
 
   return (
-    <NamesContext.Provider value={{ names, addName, removeName, clearNames }}>
+    <NamesContext.Provider value={{ names, removeName, clearNames }}>
       {children}
     </NamesContext.Provider>
   );
